@@ -1,0 +1,34 @@
+The user has the page "https://pang07x.vercel.app/" open and an error message is shown in the DevTools Console for this page. The error message is wrapped within <DevToolsErrorMessage></DevToolsErrorMessage> below. Explain the error message and what could have caused it, and provide a way to fix it. <DevToolsErrorMessage>OnlineMultiplayer.js:238 WebSocket connection to 'ws://localhost:3000/' failed: </DevToolsErrorMessage> OnlineMultiplayer.js:238 WebSocket connection to 'ws://localhost:3000/' failed: Explain the error message from DevTools console
+🔧 Error Explanation:
+
+The message:
+
+Code
+OnlineMultiplayer.js:238  WebSocket connection to 'ws://localhost:3000/' failed:
+means that the JavaScript file OnlineMultiplayer.js attempted to establish a WebSocket connection to a server running on localhost:3000, but the connection failed.
+
+🧠 Why This Happens
+localhost refers to the user's own machine, not the Vercel-hosted site. So when someone visits https://pang07x.vercel.app/, their browser tries to connect to ws://localhost:3000/—but unless they’re running a WebSocket server on their own device at port 3000, the connection will fail.
+
+This setup works locally during development, but fails in production unless the WebSocket server is deployed to a public host.
+
+🛠️ How to Fix It
+To make online multiplayer work on the deployed site, you need to:
+
+Deploy the signaling server to a public host:
+
+Host your WebSocket server on a cloud platform (e.g. Heroku, Render, Railway, or a VPS).
+
+Update the WebSocket URL in OnlineMultiplayer.js to point to the public server:
+
+js
+const socket = new WebSocket('wss://your-public-server.com');
+Update the client code:
+
+Replace 'ws://localhost:3000/' with the public WebSocket endpoint.
+
+Ensure CORS and WebSocket security settings are properly configured on the server.
+
+Optional fallback for LAN play:
+
+If you want to support LAN play, include a toggle that switches between localhost and the public server based on user selection.
